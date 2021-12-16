@@ -1,11 +1,13 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.List;
+
+import com.lorcan.advent.utils.LogAndLoad;
 
 public class Day3 {
 
   public static void main(String[] args) {
-    List<String> lines = Utils.readFile("day-3-input.txt");
+    List<String> lines = LogAndLoad.readFile("twentytwenty/day-3-input.txt");
     SquareType[][] map = buildMap(lines);
 
     int xBound = lines.get(0).length();

@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,12 +8,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.lorcan.advent.utils.LogAndLoad;
+
 public class Day14 {
   private static final Pattern MASK = Pattern.compile("^mask\\s=\\s(.*)$");
   private static final Pattern MEM = Pattern.compile("^mem\\[(\\d*)\\]\\s=\\s(.*)$");
 
   public static void main(String[] args) {
-    List<String> lines = Utils.readFile("day-14-input.txt");
+    List<String> lines = LogAndLoad.readFile("twentytwenty/day-14-input.txt");
     partOne(lines);
     partTwo(lines);
   }

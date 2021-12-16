@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.HashMap;
 import java.util.List;
@@ -7,12 +7,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.lorcan.advent.utils.LogAndLoad;
+
 public class Day2 {
 
   private static final Pattern PASSWORD_POLICY_PATTERN = Pattern.compile("^(\\d+)-(\\d+)\\s+([a-z]):\\s+(.*)$");
 
   public static void main(String[] args) {
-    List<PasswordPolicy> passwordPolicies = Utils.readFile("day-2-input.txt")
+    List<PasswordPolicy> passwordPolicies = LogAndLoad.readFile("twentytwenty/day-2-input.txt")
         .stream()
         .map(PasswordPolicy::fromString)
         .collect(Collectors.toUnmodifiableList());

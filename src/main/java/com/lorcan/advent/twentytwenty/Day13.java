@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,9 +10,11 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.lorcan.advent.utils.LogAndLoad;
+
 public class Day13 {
   public static void main(String[] args) {
-    List<String> lines = Utils.readFile("day-13-input.txt");
+    List<String> lines = LogAndLoad.readFile("twentytwenty/day-13-input.txt");
 
     long timestamp = Long.parseLong(lines.get(0), 10);
     Set<Long> ids = Arrays.stream(lines.get(1).split(","))

@@ -1,10 +1,12 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.lorcan.advent.utils.LogAndLoad;
 
 public class Day12 {
   private static final List<Action> DIRECTIONS = List.of(
@@ -25,7 +27,7 @@ public class Day12 {
   );
 
   public static void main(String[] args) {
-    List<Instruction> instructions = Utils.readFile("day-12-input.txt")
+    List<Instruction> instructions = LogAndLoad.readFile("twentytwenty/day-12-input.txt")
         .stream()
         .map(Instruction::fromString)
         .collect(Collectors.toUnmodifiableList());

@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -7,11 +7,13 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import com.lorcan.advent.utils.LogAndLoad;
+
 public class Day8 {
 
   public static void main(String[] args) {
     AtomicInteger atomicInteger = new AtomicInteger(0);
-    List<Instruction> instructions = Utils.readFile("day-8-input.txt")
+    List<Instruction> instructions = LogAndLoad.readFile("twentytwenty/day-8-input.txt")
         .stream()
         .map(str -> Instruction.fromString(str, atomicInteger))
         .collect(Collectors.toUnmodifiableList());

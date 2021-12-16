@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.utils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.google.common.io.Resources;
 
-public class Utils {
+public class LogAndLoad {
 
   private static final String ANSI_RESET = "\u001B[0m";
 

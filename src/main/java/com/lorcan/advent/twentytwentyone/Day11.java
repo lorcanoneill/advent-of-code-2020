@@ -1,150 +1,234 @@
 package com.lorcan.advent.twentytwentyone;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.Stack;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.lorcan.advent.Utils;
+import com.lorcan.advent.utils.LogAndLoad;
 
-public class Day10 {
+public class Day11 {
 
-  private static final String INPUT = "twentytwentyone/day-10-input.txt";
-  private static final String SAMPLE_INPUT = "twentytwentyone/day-10-sample-input.txt";
-
-  private static final Set<Character> OPENERS = Set.of(
-      '(', '[', '{', '<'
-  );
-
-  private static final Map<Character, Character> PAIRS = Map.of(
-      ')', '(',
-      ']', '[',
-      '}', '{',
-      '>', '<'
-  );
-
-  private static final Map<Character, Long> PART_ONE_SCORES = Map.of(
-      ')', 3L,
-      ']', 57L,
-      '}', 1197L,
-      '>', 25137L
-  );
-
-  private static final Map<Character, Long> PART_TWO_SCORES = Map.of(
-      '(', 1L,
-      '[', 2L,
-      '{', 3L,
-      '<', 4L
-  );
-
+  private static final String INPUT = "twentytwentyone/day-11-input.txt";
+  private static final String SAMPLE_INPUT = "twentytwentyone/day-11-sample-input.txt";
 
   public static void main(String[] args) {
-    List<String> sampleLines = Utils.readFile(SAMPLE_INPUT);
-    List<String> lines = Utils.readFile(INPUT);
-
-    List<LineResult> sampleLineResults = analyzeLines(sampleLines);
-    List<LineResult> lineResults = analyzeLines(lines);
-
-    partOne(sampleLineResults);
-    partOne(lineResults);
-
-    partTwo(sampleLineResults);
-    partTwo(lineResults);
+    Octopus[][] sampleGrid = buildGrid(SAMPLE_INPUT);
+    partTwo(sampleGrid);
+    partOne(sampleGrid);
+//
+    Octopus[][] grid = buildGrid(INPUT);
+    partOne(grid);
+    partTwo(grid);
   }
 
-  private static void partOne(List<LineResult> lineResults) {
-    long sum = 0L;
-    for (LineResult lineResult : lineResults) {
-      if (lineResult.getIllegalCharacter().isPresent()) {
-        char illegalCharacter = lineResult.getIllegalCharacter().get();
-        long score = PART_ONE_SCORES.get(illegalCharacter);
-        sum += score;
-        Utils.log("Found illegal character %s, expected: %s: adding %d to sum %d", illegalCharacter, lineResult.getStack().peek(), score, sum);
-      }
-    }
-  }
+  private static void partOne(Octopus[][] grid) {
+    long flashes = 0;
+    int maxY = grid.length;
+    int maxX = grid[0].length;
+    for (int step = 1; step <= 100; step++) {
+      int countOfPointsExamined = 0;
+      long flashesThisStep = 0;
+      Stack<Point> points = calculateBaseStack(maxX, maxY);
+      while (!points.isEmpty()) {
+        Point point = points.pop();
 
-  private static List<LineResult> analyzeLines(List<String> lines) {
-    List<LineResult> lineResults = new ArrayList<>();
-    for (String line : lines) {
-      Stack<Character> stack = new Stack<>();
-      Optional<Character> illegalCharacter = Optional.empty();
-      for (char c : line.toCharArray()) {
-        if (OPENERS.contains(c)) {
-          stack.add(c);
-        } else {
-          char peekedCharacter = stack.peek();
-          if (PAIRS.get(c) != peekedCharacter) {
-            illegalCharacter = Optional.of(c);
-            break;
-          }
-
-          stack.pop();
+        if (!isPointValid(point, maxX, maxY)) {
+          continue;
         }
+
+        countOfPointsExamined++;
+
+        Octopus octopus = grid[point.getY()][point.getX()].increaseEnergyLevel();
+        if (octopus.calculateFlashStatus() == FlashStatus.WILL_FLASH) {
+          points.addAll(findAdjacentPoints(octopus.getPoint()));
+          flashesThisStep += 1;
+          octopus = octopus.setHasFlashedThisTurn();
+        }
+        grid[point.getY()][point.getX()] = octopus;
+      }
+      flashes += flashesThisStep;
+      LogAndLoad.log("Total flashes: %d, step %d and %d points: %d", flashes, step, countOfPointsExamined, flashesThisStep);
+
+      points = calculateBaseStack(maxX, maxY);
+
+      while (!points.isEmpty()) {
+        Point point = points.pop();
+        Octopus octopus = grid[point.getY()][point.getX()];
+        grid[point.getY()][point.getX()] = octopus.resetOctopus();
+      }
+    }
+  }
+
+  private static void partTwo(Octopus[][] grid) {
+    boolean allFlashed = false;
+    int maxY = grid.length;
+    int maxX = grid[0].length;
+    int step = 0;
+    while (!allFlashed) {
+      step++;
+      Stack<Point> points = calculateBaseStack(maxX, maxY);
+      while (!points.isEmpty()) {
+        Point point = points.pop();
+
+        if (!isPointValid(point, maxX, maxY)) {
+          continue;
+        }
+
+        Octopus octopus = grid[point.getY()][point.getX()].increaseEnergyLevel();
+        if (octopus.calculateFlashStatus() == FlashStatus.WILL_FLASH) {
+          points.addAll(findAdjacentPoints(octopus.getPoint()));
+          octopus = octopus.setHasFlashedThisTurn();
+        }
+        grid[point.getY()][point.getX()] = octopus;
       }
 
-      lineResults.add(new LineResult(line, stack, illegalCharacter));
+      points = calculateBaseStack(maxX, maxY);
+
+      boolean meetsEndCondition = true;
+      while (!points.isEmpty()) {
+        Point point = points.pop();
+        Octopus octopus = grid[point.getY()][point.getX()];
+        meetsEndCondition &= octopus.calculateFlashStatus() == FlashStatus.ALREADY_FLASHED;
+        grid[point.getY()][point.getX()] = octopus.resetOctopus();
+      }
+
+      allFlashed = meetsEndCondition;
     }
-    return lineResults;
+
+    LogAndLoad.log("All octopi flashed on step %d", step);
   }
 
-  private static void partTwo(List<LineResult> lineResults) {
-    Utils.log("Started with %d lines", lineResults.size());
-
-    lineResults = lineResults.stream()
-        .filter(lineResult -> lineResult.getIllegalCharacter().isEmpty())
-        .collect(Collectors.toUnmodifiableList());
-
-    Utils.log("Left with %d incomplete lines", lineResults.size());
-
-    List<Long> scores = new ArrayList<>();
-    for (LineResult lineResult : lineResults) {
-      long score = autoCompleteScore(lineResult);
-      scores.add(score);
-      Utils.log("Score of %d for line: %s", score, lineResult.getLine());
-    }
-
-    long middleScore = scores.stream()
-        .sorted(Comparator.naturalOrder())
-        .collect(Collectors.toUnmodifiableList())
-        .get((lineResults.size() -1) / 2);
-    Utils.log("Middle score: %d", middleScore);
+  private static boolean isPointValid(Point point, int maxX, int maxY) {
+    return point.getX() >= 0 && point.getX() < maxX
+        && point.getY() >= 0 && point.getY() < maxY;
   }
 
-  private static long autoCompleteScore(LineResult lineResult) {
-    long score = 0;
-    while (!lineResult.getStack().isEmpty()) {
-      score *= 5;
-      score += PART_TWO_SCORES.get(lineResult.getStack().pop());
+  private static Stack<Point> calculateBaseStack(int maxX, int maxY) {
+    Stack<Point> stack = new Stack<>();
+    for (int y = 0; y < maxY; y++) {
+      for (int x = 0; x < maxX; x++) {
+        stack.add(new Point(x, y));
+      }
     }
-    return score;
+
+    return stack;
   }
 
-  static class LineResult {
-    private final String line;
-    private final Stack<Character> stack;
-    private final Optional<Character> illegalCharacter;
 
-    public LineResult(String line, Stack<Character> stack, Optional<Character> illegalCharacter) {
-      this.line = line;
-      this.stack = stack;
-      this.illegalCharacter = illegalCharacter;
+  private static Octopus[][] buildGrid(String input) {
+    List<String> lines = LogAndLoad.readFile(input);
+    int maxX = lines.get(0).length();
+    int maxY = lines.size();
+    Octopus[][] grid = new Octopus[maxY][maxX];
+    for (int y = 0; y < maxY; y++) {
+      String line = lines.get(y);
+      for (int x = 0; x < maxX; x++) {
+        grid[y][x] = new Octopus(new Point(x, y), Integer.parseInt(line.substring(x, x + 1)));
+      }
     }
 
-    public Optional<Character> getIllegalCharacter() {
-      return illegalCharacter;
+    return grid;
+  }
+
+  private static Set<Point> findAdjacentPoints(Point point) {
+    return Arrays.stream(Direction.values())
+        .map(direction -> direction.getTransform().apply(point))
+        .collect(Collectors.toUnmodifiableSet());
+  }
+
+  static class Octopus {
+    private final Point point;
+    private int energyLevel;
+    boolean hasFlashedThisTurn;
+
+    public Octopus(Point point, int energyLevel) {
+      this.point = point;
+      this.energyLevel = energyLevel;
     }
 
-    public String getLine() {
-      return line;
+    public Point getPoint() {
+      return point;
     }
 
-    public Stack<Character> getStack() {
-      return stack;
+    public Octopus increaseEnergyLevel() {
+      if (energyLevel <= 9) {
+        this.energyLevel = energyLevel + 1;
+      }
+      return this;
+    }
+
+    public Octopus setHasFlashedThisTurn() {
+      this.hasFlashedThisTurn = true;
+      return this;
+    }
+
+    public FlashStatus calculateFlashStatus() {
+      if (hasFlashedThisTurn) {
+        return FlashStatus.ALREADY_FLASHED;
+      }
+
+      if (energyLevel > 9) {
+        return FlashStatus.WILL_FLASH;
+      }
+
+      return FlashStatus.WILL_NOT_FLASH;
+    }
+
+    public Octopus resetOctopus() {
+      if (this.energyLevel > 9) {
+        this.energyLevel = 0;
+      }
+
+      this.hasFlashedThisTurn = false;
+      return this;
+    }
+  }
+
+  static class Point {
+    private final int x;
+    private final int y;
+
+    public Point(int x, int y) {
+      this.x = x;
+      this.y = y;
+    }
+
+    public int getX() {
+      return x;
+    }
+
+    public int getY() {
+      return y;
+    }
+  }
+
+  enum FlashStatus {
+    WILL_FLASH,
+    WILL_NOT_FLASH,
+    ALREADY_FLASHED;
+  }
+
+  enum Direction {
+    UP(point -> new Point(point.getX(), point.getY() - 1)),
+    DOWN(point -> new Point(point.getX(), point.getY() + 1)),
+    LEFT(point -> new Point(point.getX() - 1, point.getY())),
+    RIGHT(point -> new Point(point.getX() + 1, point.getY())),
+    UP_LEFT(point -> new Point(point.getX() - 1, point.getY() - 1)),
+    UP_RIGHT(point -> new Point(point.getX() + 1, point.getY() - 1)),
+    DOWN_LEFT(point -> new Point(point.getX() - 1, point.getY() + 1)),
+    DOWN_RIGHT(point -> new Point(point.getX() + 1, point.getY() + 1));
+
+    private final Function<Point, Point> transform;
+
+    Direction(Function<Point, Point> transform) {
+      this.transform = transform;
+    }
+
+    public Function<Point, Point> getTransform() {
+      return transform;
     }
   }
 }

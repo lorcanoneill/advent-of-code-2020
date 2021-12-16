@@ -1,13 +1,15 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.lorcan.advent.utils.LogAndLoad;
+
 public class Day5 {
 
   public static void main(String[] args) {
-    List<String> boardingPasses = Utils.readFile("day-5-input.txt");
+    List<String> boardingPasses = LogAndLoad.readFile("twentytwenty/day-5-input.txt");
     partOne(boardingPasses);
     partTwo(boardingPasses);
   }

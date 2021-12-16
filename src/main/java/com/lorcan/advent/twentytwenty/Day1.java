@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.HashSet;
 import java.util.List;
@@ -7,10 +7,11 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.lorcan.advent.utils.LogAndLoad;
 
 public class Day1 {
 
-  private static final String INPUT = "day-1-input.txt";
+  private static final String INPUT = "twentytwenty/day-1-input.txt";
 
   public static void main(String[] args) {
     partOne();
@@ -18,7 +19,7 @@ public class Day1 {
   }
 
   private static void partOne() {
-    List<Integer> integers = Utils.readFile(INPUT)
+    List<Integer> integers = LogAndLoad.readFile(INPUT)
         .stream().map(str -> Integer.parseInt(str.trim()))
         .collect(Collectors.toUnmodifiableList());
 
@@ -35,7 +36,7 @@ public class Day1 {
   }
 
   private static void partTwo() {
-    List<Integer> integers = Utils.readFile(INPUT)
+    List<Integer> integers = LogAndLoad.readFile(INPUT)
         .stream().map(str -> Integer.parseInt(str.trim()))
         .collect(Collectors.toUnmodifiableList());
 

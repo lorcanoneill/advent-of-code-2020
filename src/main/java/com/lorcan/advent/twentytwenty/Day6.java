@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,10 +8,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.lorcan.advent.utils.LogAndLoad;
+
 public class Day6 {
 
   public static void main(String[] args) {
-    List<List<String>> groups = Arrays.stream(Utils.readFileAsString("day-6-input.txt").split("\n\n"))
+    List<List<String>> groups = Arrays.stream(LogAndLoad.readFileAsString("twentytwenty/day-6-input.txt").split("\n\n"))
         .map(str -> Arrays.stream(str.split("\n")).collect(Collectors.toUnmodifiableList()))
         .collect(Collectors.toUnmodifiableList());
     partOne(groups);

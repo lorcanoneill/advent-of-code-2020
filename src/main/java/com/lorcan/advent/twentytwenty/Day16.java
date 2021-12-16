@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,10 +10,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.lorcan.advent.utils.LogAndLoad;
+
 public class Day16 {
 
   public static void main(String[] args) {
-    List<String> lines = Utils.readFile("day-16-input.txt");
+    List<String> lines = LogAndLoad.readFile("twentytwenty/day-16-input.txt");
 
     Target target = Target.RULE;
     List<Rule> rules = new ArrayList<>();

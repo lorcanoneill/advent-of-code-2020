@@ -1,13 +1,14 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.lorcan.advent.utils.LogAndLoad;
 
 public class Day4 {
 
@@ -24,7 +25,7 @@ public class Day4 {
   private static final Pattern PASSPORT = Pattern.compile("^\\d{9}$");
 
   public static void main(String[] args) {
-    List<Map<String, Object>> passports = Arrays.stream(Utils.readFileAsString("day-4-input.txt")
+    List<Map<String, Object>> passports = Arrays.stream(LogAndLoad.readFileAsString("twentytwenty/day-4-input.txt")
         .split("\\n\\n"))
         .map(Day4::buildPassport)
         .collect(Collectors.toUnmodifiableList());

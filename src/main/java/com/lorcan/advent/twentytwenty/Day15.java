@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -8,12 +8,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Stopwatch;
+import com.lorcan.advent.utils.LogAndLoad;
 
 public class Day15 {
   public static void main(String[] args) {
     List<Integer> startingNumbers =
         Arrays.stream(
-          Utils.readFileAsString("day-15-input.txt").split(",")
+          LogAndLoad.readFileAsString("twentytwenty/day-15-input.txt").split(",")
         )
         .map(Integer::parseInt)
         .collect(Collectors.toUnmodifiableList());

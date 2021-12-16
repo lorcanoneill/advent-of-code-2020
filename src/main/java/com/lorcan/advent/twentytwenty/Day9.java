@@ -1,15 +1,16 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
+import com.lorcan.advent.utils.LogAndLoad;
 
 public class Day9 {
   private static final Long MAGIC_NUMBER = 167829540L;
 
   public static void main(String[] args) {
-    List<Long> numbers = Utils.readFile("day-9-input.txt")
+    List<Long> numbers = LogAndLoad.readFile("twentytwenty/day-9-input.txt")
         .stream()
         .map(Long::parseLong)
         .collect(Collectors.toUnmodifiableList());

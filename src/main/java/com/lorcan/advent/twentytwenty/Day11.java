@@ -1,15 +1,16 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
+import com.lorcan.advent.utils.LogAndLoad;
 
 public class Day11 {
 
   public static void main(String[] args) {
-    List<String> lines = Utils.readFile("day-11-input.txt");
+    List<String> lines = LogAndLoad.readFile("twentytwenty/day-11-input.txt");
 
     int xBound = lines.get(0).length();
     int yBound = lines.size();

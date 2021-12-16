@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,14 +13,15 @@ import java.util.stream.Collectors;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import com.lorcan.advent.Day7.BagRule.BagInformation;
+import com.lorcan.advent.utils.LogAndLoad;
+import com.lorcan.advent.twentytwenty.Day7.BagRule.BagInformation;
 
 public class Day7 {
   private static final String SHINY_GOLD = "shiny gold";
   private static final Pattern BAG_INFORMATION_PATTERN = Pattern.compile("^(\\d+)\\s+(.*)\\.?$");
 
   public static void main(String[] args) {
-    List<BagRule> bagRules = Utils.readFile("day-7-input.txt")
+    List<BagRule> bagRules = LogAndLoad.readFile("twentytwenty/day-7-input.txt")
         .stream()
         .map(BagRule::fromString)
         .collect(Collectors.toUnmodifiableList());

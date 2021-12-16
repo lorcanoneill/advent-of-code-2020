@@ -1,4 +1,4 @@
-package com.lorcan.advent;
+package com.lorcan.advent.twentytwenty;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,12 +9,13 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import com.google.common.collect.ImmutableList;
+import com.lorcan.advent.utils.LogAndLoad;
 
 
 public class Day10 {
 
   public static void main(String[] args) {
-    List<Integer> adapterJoltageRatings = Utils.readFile("day-10-input.txt")
+    List<Integer> adapterJoltageRatings = LogAndLoad.readFile("twentytwenty/day-10-input.txt")
         .stream()
         .map(Integer::parseInt)
         .sorted()
